@@ -1,0 +1,924 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Boicot Café — Análisis Mayo 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rappi-orange: #FF441B;
+    --rappi-orange-light: #FF6B47;
+    --dark: #0D0D0D;
+    --dark-2: #141414;
+    --dark-3: #1C1C1C;
+    --dark-4: #252525;
+    --border: #2E2E2E;
+    --text-muted: #666;
+    --text-secondary: #999;
+    --text-primary: #F0F0F0;
+    --green: #22C55E;
+    --red: #EF4444;
+    --yellow: #F59E0B;
+    --blue: #3B82F6;
+    --purple: #A855F7;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--dark);
+    color: var(--text-primary);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    line-height: 1.5;
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--dark-2);
+    border-bottom: 1px solid var(--border);
+    padding: 24px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .header-left { display: flex; align-items: center; gap: 16px; }
+  .rappi-dot {
+    width: 36px; height: 36px;
+    background: var(--rappi-orange);
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800; font-size: 16px; color: white;
+  }
+  .brand-title { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 22px; }
+  .brand-sub { font-size: 12px; color: var(--text-secondary); margin-top: 2px; }
+  .header-badge {
+    background: var(--dark-3);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 6px 14px;
+    font-size: 12px;
+    color: var(--text-secondary);
+  }
+  .header-badge span { color: var(--rappi-orange); font-weight: 600; }
+
+  /* MAIN */
+  .main { padding: 32px 40px; max-width: 1280px; margin: 0 auto; }
+
+  /* SECTION TITLE */
+  .section-label {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 16px;
+    display: flex; align-items: center; gap: 8px;
+  }
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* GRID LAYOUTS */
+  .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 24px; }
+  .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 24px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 12px; margin-bottom: 24px; }
+  .grid-1-2 { display: grid; grid-template-columns: 1fr 2fr; gap: 12px; margin-bottom: 24px; }
+
+  /* KPI CARD */
+  .kpi {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .kpi:hover { border-color: #444; }
+  .kpi-label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+  .kpi-value { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; line-height: 1; margin-bottom: 8px; }
+  .kpi-delta {
+    font-size: 12px; font-weight: 500;
+    display: inline-flex; align-items: center; gap: 4px;
+    padding: 2px 8px; border-radius: 20px;
+  }
+  .kpi-delta.up { background: rgba(34,197,94,0.12); color: var(--green); }
+  .kpi-delta.down { background: rgba(239,68,68,0.12); color: var(--red); }
+  .kpi-delta.neutral { background: rgba(245,158,11,0.12); color: var(--yellow); }
+  .kpi-sub { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+  .kpi-accent {
+    position: absolute; top: 0; right: 0;
+    width: 3px; height: 100%;
+    border-radius: 0 12px 12px 0;
+  }
+  .kpi-accent.red { background: var(--red); }
+  .kpi-accent.green { background: var(--green); }
+  .kpi-accent.yellow { background: var(--yellow); }
+  .kpi-accent.orange { background: var(--rappi-orange); }
+  .kpi-accent.blue { background: var(--blue); }
+
+  /* CARD */
+  .card {
+    background: var(--dark-2);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+  }
+  .card-title {
+    font-family: 'Syne', sans-serif;
+    font-weight: 600; font-size: 13px;
+    color: var(--text-secondary);
+    margin-bottom: 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  /* MINI BAR CHART */
+  .bar-chart { display: flex; flex-direction: column; gap: 10px; }
+  .bar-row { display: flex; align-items: center; gap: 10px; }
+  .bar-label { font-size: 11px; color: var(--text-secondary); width: 160px; flex-shrink: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .bar-track { flex: 1; background: var(--dark-4); border-radius: 3px; height: 6px; overflow: hidden; }
+  .bar-fill { height: 100%; border-radius: 3px; transition: width 0.6s ease; }
+  .bar-val { font-size: 11px; font-weight: 600; width: 60px; text-align: right; flex-shrink: 0; }
+
+  /* METRIC ROW TABLE */
+  .metric-table { width: 100%; border-collapse: collapse; }
+  .metric-table th {
+    font-size: 10px; font-weight: 600; color: var(--text-muted);
+    text-transform: uppercase; letter-spacing: 0.5px;
+    padding: 6px 10px; text-align: right;
+    border-bottom: 1px solid var(--border);
+  }
+  .metric-table th:first-child { text-align: left; }
+  .metric-table td {
+    padding: 9px 10px; font-size: 12px;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    text-align: right;
+  }
+  .metric-table td:first-child { text-align: left; color: var(--text-primary); }
+  .metric-table tr:last-child td { border-bottom: none; }
+  .metric-table tr:hover td { background: rgba(255,255,255,0.02); }
+  .pill {
+    display: inline-block; padding: 2px 8px; border-radius: 20px;
+    font-size: 10px; font-weight: 600;
+  }
+  .pill.green { background: rgba(34,197,94,0.12); color: var(--green); }
+  .pill.red { background: rgba(239,68,68,0.12); color: var(--red); }
+  .pill.yellow { background: rgba(245,158,11,0.12); color: var(--yellow); }
+  .pill.blue { background: rgba(59,130,246,0.12); color: var(--blue); }
+
+  /* TRAFFIC LIGHT */
+  .ops-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+  .ops-row {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 10px 12px;
+    background: var(--dark-3);
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .ops-metric { font-size: 12px; color: var(--text-secondary); }
+  .ops-vals { text-align: right; }
+  .ops-main { font-family: 'Syne', sans-serif; font-size: 15px; font-weight: 700; }
+  .ops-target { font-size: 10px; color: var(--text-muted); }
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; margin-right: 8px; flex-shrink: 0; }
+  .status-dot.green { background: var(--green); box-shadow: 0 0 6px var(--green); }
+  .status-dot.red { background: var(--red); box-shadow: 0 0 6px var(--red); }
+  .status-dot.yellow { background: var(--yellow); box-shadow: 0 0 6px var(--yellow); }
+
+  /* ALERT BOX */
+  .alert {
+    border-radius: 10px;
+    padding: 14px 16px;
+    margin-bottom: 10px;
+    border-left: 3px solid;
+    font-size: 12px;
+    line-height: 1.6;
+  }
+  .alert strong { display: block; font-size: 13px; margin-bottom: 4px; }
+  .alert.danger { background: rgba(239,68,68,0.08); border-color: var(--red); color: #fca5a5; }
+  .alert.warn { background: rgba(245,158,11,0.08); border-color: var(--yellow); color: #fcd34d; }
+  .alert.success { background: rgba(34,197,94,0.08); border-color: var(--green); color: #86efac; }
+  .alert.info { background: rgba(59,130,246,0.08); border-color: var(--blue); color: #93c5fd; }
+
+  /* SPARKLINE-STYLE TREND */
+  .trend-row { display: flex; align-items: flex-end; gap: 4px; height: 40px; margin-bottom: 4px; }
+  .trend-bar { flex: 1; background: var(--dark-4); border-radius: 2px; position: relative; }
+  .trend-bar .fill { position: absolute; bottom: 0; left: 0; right: 0; border-radius: 2px; }
+  .trend-labels { display: flex; justify-content: space-between; font-size: 9px; color: var(--text-muted); }
+
+  /* SCORE BADGE */
+  .score-badge {
+    width: 56px; height: 56px; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 18px;
+    flex-shrink: 0;
+  }
+
+  /* DIVIDER */
+  .divider { height: 1px; background: var(--border); margin: 28px 0; }
+
+  /* FUNNEL */
+  .funnel { display: flex; flex-direction: column; gap: 6px; }
+  .funnel-step {
+    display: flex; align-items: center; gap: 12px;
+    padding: 8px 12px; background: var(--dark-3); border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  .funnel-pct { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px; min-width: 60px; }
+  .funnel-label { font-size: 12px; color: var(--text-secondary); }
+  .funnel-n { font-size: 11px; color: var(--text-muted); margin-left: auto; }
+  .funnel-bar-wrap { position: absolute; left: 0; top: 0; height: 100%; border-radius: 8px; }
+
+  /* USER TYPE */
+  .user-types { display: flex; gap: 8px; }
+  .user-type-item {
+    flex: 1; padding: 12px; text-align: center;
+    background: var(--dark-3); border-radius: 10px; border: 1px solid var(--border);
+  }
+  .user-type-pct { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 20px; }
+  .user-type-n { font-size: 11px; color: var(--text-muted); }
+  .user-type-label { font-size: 11px; color: var(--text-secondary); margin-top: 4px; }
+
+  /* PRODUCT TABLE */
+  .prod-row {
+    display: flex; align-items: center; gap: 10px;
+    padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  .prod-rank { font-size: 11px; color: var(--text-muted); width: 20px; flex-shrink: 0; }
+  .prod-name { flex: 1; font-size: 12px; }
+  .prod-piezas { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; min-width: 28px; text-align: right; }
+  .prod-delta-wrap { min-width: 60px; text-align: right; }
+
+  /* CONSOLIDADO */
+  .consolidado-header {
+    display: flex; align-items: center; gap: 16px;
+    padding: 16px; background: var(--dark-3); border-radius: 10px;
+    border: 1px solid var(--border); margin-bottom: 10px;
+  }
+
+  /* INSIGHT CHIPS */
+  .insights { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 24px; }
+  .insight-chip {
+    background: var(--dark-3); border: 1px solid var(--border);
+    border-radius: 20px; padding: 6px 14px; font-size: 12px;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .insight-chip .ic { font-size: 14px; }
+
+  .mb-24 { margin-bottom: 24px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <div class="header-left">
+    <div class="rappi-dot">R</div>
+    <div>
+      <div class="brand-title">Boicot Café</div>
+      <div class="brand-sub">Análisis de Resultados · Ciudad de México</div>
+    </div>
+  </div>
+  <div class="header-badge">Período <span>Mayo 2026</span> · 7 sucursales · CDMX</div>
+</div>
+
+<div class="main">
+
+  <!-- QUICK INSIGHTS -->
+  <div class="insights">
+    <div class="insight-chip"><span class="ic">📉</span> Ventas -6.6% vs mes anterior (abril)</div>
+    <div class="insight-chip"><span class="ic">📉</span> Órdenes -62.2% vs año anterior</div>
+    <div class="insight-chip"><span class="ic">⚠️</span> Delivery time en 44.7 min (objetivo: 30 min)</div>
+    <div class="insight-chip"><span class="ic">✅</span> Disponibilidad 99.4% — sobre objetivo</div>
+    <div class="insight-chip"><span class="ic">🚨</span> Antara tiempo de entrega: 69 min</div>
+    <div class="insight-chip"><span class="ic">📦</span> Naucalpan 0% disponibilidad</div>
+  </div>
+
+  <!-- 1. VENTAS Y VOLUMEN -->
+  <div class="section-label">📊 Performance Comercial — Mayo 2026</div>
+  <div class="grid-4 mb-24">
+    <div class="kpi">
+      <div class="kpi-accent red"></div>
+      <div class="kpi-label">Venta Neta</div>
+      <div class="kpi-value" style="color:#FF6B6B">$28,1K</div>
+      <div class="kpi-delta down">↓ -6.6% vs Abr</div>
+      <div class="kpi-sub">LY: $77K · -62.3% YoY</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent red"></div>
+      <div class="kpi-label">Órdenes</div>
+      <div class="kpi-value" style="color:#FF6B6B">94</div>
+      <div class="kpi-delta down">↓ -4.1% vs Abr</div>
+      <div class="kpi-sub">LY: 249 · -62.2% YoY</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent yellow"></div>
+      <div class="kpi-label">Ticket Promedio (AOV)</div>
+      <div class="kpi-value" style="color:#FCD34D">$310</div>
+      <div class="kpi-delta down">↓ -2.7% vs Abr</div>
+      <div class="kpi-sub">LY: $311 · estable YoY</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent orange"></div>
+      <div class="kpi-label">Usuarios</div>
+      <div class="kpi-value" style="color:#FF9A6C">89</div>
+      <div class="kpi-delta up">↑ +2.3% vs Abr</div>
+      <div class="kpi-sub">LY: 206 · -56.8% YoY</div>
+    </div>
+  </div>
+
+  <!-- 2. TENDENCIA MENSUAL + VENTA POR TIENDA -->
+  <div class="grid-2 mb-24">
+
+    <div class="card">
+      <div class="card-title">Tendencia Ventas (últ. 6 meses)</div>
+      <div class="trend-row">
+        <div class="trend-bar" style="height:100%"><div class="fill" style="height:100%;background:rgba(255,68,27,0.6)"></div></div>
+        <div class="trend-bar" style="height:90%"><div class="fill" style="height:100%;background:rgba(255,68,27,0.55)"></div></div>
+        <div class="trend-bar" style="height:72%"><div class="fill" style="height:100%;background:rgba(255,68,27,0.5)"></div></div>
+        <div class="trend-bar" style="height:60%"><div class="fill" style="height:100%;background:rgba(255,68,27,0.45)"></div></div>
+        <div class="trend-bar" style="height:47%"><div class="fill" style="height:100%;background:rgba(255,68,27,0.4)"></div></div>
+        <div class="trend-bar" style="height:40%"><div class="fill" style="height:100%;background:rgba(255,68,27,0.9)"></div></div>
+      </div>
+      <div class="trend-labels">
+        <span>Dic 25</span><span>Ene 26</span><span>Feb 26</span><span>Mar 26</span><span>Abr 26</span><span style="color:var(--rappi-orange)">May 26</span>
+      </div>
+      <div style="margin-top:14px;display:flex;gap:6px;flex-wrap:wrap">
+        <div style="flex:1;padding:8px;background:var(--dark-3);border-radius:8px;text-align:center">
+          <div style="font-size:10px;color:var(--text-muted)">Frecuencia</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">1.06</div>
+          <div style="font-size:10px;color:var(--red)">↓ -6.2% vs Abr</div>
+        </div>
+        <div style="flex:1;padding:8px;background:var(--dark-3);border-radius:8px;text-align:center">
+          <div style="font-size:10px;color:var(--text-muted)">Prime Users</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">68%</div>
+          <div style="font-size:10px;color:var(--red)">↓ -11.1% vs Abr</div>
+        </div>
+        <div style="flex:1;padding:8px;background:var(--dark-3);border-radius:8px;text-align:center">
+          <div style="font-size:10px;color:var(--text-muted)">No Prime</div>
+          <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:15px">32%</div>
+          <div style="font-size:10px;color:var(--green)">↑ +15.4% vs Abr</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Venta por Tienda — Mayo</div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label">Coyoacan</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:#FF441B"></div></div>
+          <div class="bar-val" style="color:#FF441B">$7,275</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Tamaulipas</div>
+          <div class="bar-track"><div class="bar-fill" style="width:96%;background:#FF6B47"></div></div>
+          <div class="bar-val" style="color:#FF6B47">$7,029</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Jalapa</div>
+          <div class="bar-track"><div class="bar-fill" style="width:94%;background:#FFA07A"></div></div>
+          <div class="bar-val" style="color:#FFA07A">$6,890</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Cuauhtémoc</div>
+          <div class="bar-track"><div class="bar-fill" style="width:58%;background:#888"></div></div>
+          <div class="bar-val" style="color:#888">$4,263</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Polanco</div>
+          <div class="bar-track"><div class="bar-fill" style="width:34%;background:#666"></div></div>
+          <div class="bar-val" style="color:#666">$2,504</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Antara</div>
+          <div class="bar-track"><div class="bar-fill" style="width:16%;background:#444"></div></div>
+          <div class="bar-val" style="color:#555">$1,210</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--red)">Naucalpan ⚠️</div>
+          <div class="bar-track"><div class="bar-fill" style="width:0%;background:var(--red)"></div></div>
+          <div class="bar-val" style="color:var(--red)">$0</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. ÓRDENES POR TIENDA (TABLA) -->
+  <div class="card mb-24">
+    <div class="card-title">Desglose por Tienda — Mayo 2026</div>
+    <table class="metric-table">
+      <thead>
+        <tr>
+          <th>Tienda</th>
+          <th>Órdenes</th>
+          <th>% vs LM</th>
+          <th>Venta</th>
+          <th>% vs LM</th>
+          <th>AOV</th>
+          <th>% vs LM</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>☕ Coyoacan</td>
+          <td>20</td>
+          <td><span class="pill green">+17.6%</span></td>
+          <td>$7,275</td>
+          <td><span class="pill green">+38.8%</span></td>
+          <td>$364</td>
+          <td><span class="pill green">+17.9%</span></td>
+        </tr>
+        <tr>
+          <td>☕ Jalapa</td>
+          <td>26</td>
+          <td><span class="pill green">+44.4%</span></td>
+          <td>$6,890</td>
+          <td><span class="pill green">+72.7%</span></td>
+          <td>$265</td>
+          <td><span class="pill green">+19.5%</span></td>
+        </tr>
+        <tr>
+          <td>☕ Tamaulipas</td>
+          <td>23</td>
+          <td><span class="pill red">-20.7%</span></td>
+          <td>$7,029</td>
+          <td><span class="pill red">-38.8%</span></td>
+          <td>$306</td>
+          <td><span class="pill red">-22.8%</span></td>
+        </tr>
+        <tr>
+          <td>☕ Cuauhtémoc</td>
+          <td>11</td>
+          <td><span class="pill red">-8.3%</span></td>
+          <td>$4,263</td>
+          <td><span class="pill green">+8.7%</span></td>
+          <td>$388</td>
+          <td><span class="pill green">+18.5%</span></td>
+        </tr>
+        <tr>
+          <td>☕ Polanco</td>
+          <td>8</td>
+          <td><span class="pill red">-46.7%</span></td>
+          <td>$2,504</td>
+          <td><span class="pill red">-41.5%</span></td>
+          <td>$313</td>
+          <td><span class="pill green">+9.7%</span></td>
+        </tr>
+        <tr>
+          <td>☕ Antara</td>
+          <td>6</td>
+          <td><span class="pill red">-14.3%</span></td>
+          <td>$1,210</td>
+          <td><span class="pill red">-48.0%</span></td>
+          <td>$202</td>
+          <td><span class="pill red">-39.3%</span></td>
+        </tr>
+        <tr>
+          <td style="color:var(--red)">⛔ Naucalpan</td>
+          <td style="color:var(--red)">0</td>
+          <td>—</td>
+          <td style="color:var(--red)">$0</td>
+          <td>—</td>
+          <td>—</td>
+          <td>—</td>
+        </tr>
+        <tr style="background:rgba(255,68,27,0.05)">
+          <td style="font-weight:600">TOTAL</td>
+          <td style="font-weight:600">94</td>
+          <td><span class="pill red">-4.1%</span></td>
+          <td style="font-weight:600">$29,171</td>
+          <td><span class="pill red">-6.6%</span></td>
+          <td style="font-weight:600">$310</td>
+          <td><span class="pill red">-2.7%</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- 4. OPERACIONES -->
+  <div class="section-label">⚙️ Métricas Operativas</div>
+  <div class="grid-2 mb-24">
+
+    <div class="card">
+      <div class="card-title">Scorecard Operativo vs Objetivo</div>
+      <div class="ops-grid">
+
+        <div class="ops-row">
+          <div class="status-dot green"></div>
+          <div class="ops-metric">Disponibilidad</div>
+          <div class="ops-vals">
+            <div class="ops-main" style="color:var(--green)">99.4%</div>
+            <div class="ops-target">Obj: 98.0%</div>
+          </div>
+        </div>
+
+        <div class="ops-row">
+          <div class="status-dot yellow"></div>
+          <div class="ops-metric">Defect Rate</div>
+          <div class="ops-vals">
+            <div class="ops-main" style="color:var(--yellow)">2.13%</div>
+            <div class="ops-target">Máx: 1.2%</div>
+          </div>
+        </div>
+
+        <div class="ops-row">
+          <div class="status-dot yellow"></div>
+          <div class="ops-metric">Cancel Rate</div>
+          <div class="ops-vals">
+            <div class="ops-main" style="color:var(--yellow)">1.70%</div>
+            <div class="ops-target">Máx: 0.7%</div>
+          </div>
+        </div>
+
+        <div class="ops-row">
+          <div class="status-dot green"></div>
+          <div class="ops-metric">Cooking Time</div>
+          <div class="ops-vals">
+            <div class="ops-main" style="color:var(--green)">11.1 min</div>
+            <div class="ops-target">Obj: 15 min</div>
+          </div>
+        </div>
+
+        <div class="ops-row" style="grid-column:1/-1">
+          <div class="status-dot red"></div>
+          <div class="ops-metric">Tiempo Total Entrega</div>
+          <div class="ops-vals">
+            <div class="ops-main" style="color:var(--red)">44.7 min</div>
+            <div class="ops-target">Obj: 30 min · +14.7 min ⚠️</div>
+          </div>
+        </div>
+
+        <div class="ops-row">
+          <div class="status-dot green"></div>
+          <div class="ops-metric">RT Wait (RTWT)</div>
+          <div class="ops-vals">
+            <div class="ops-main" style="color:var(--green)">2.11 min</div>
+            <div class="ops-target">Máx: 3 min</div>
+          </div>
+        </div>
+
+        <div class="ops-row">
+          <div class="status-dot green"></div>
+          <div class="ops-metric">Bad Orders</div>
+          <div class="ops-vals">
+            <div class="ops-main" style="color:var(--green)">6.69%</div>
+            <div class="ops-target">Feb–May tracked</div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Tiempo de Entrega por Tienda (min)</div>
+      <div class="bar-chart">
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--red)">⚠️ Antara</div>
+          <div class="bar-track"><div class="bar-fill" style="width:100%;background:var(--red)"></div></div>
+          <div class="bar-val" style="color:var(--red)">69.3 min</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--red)">⚠️ Cuauhtémoc</div>
+          <div class="bar-track"><div class="bar-fill" style="width:71%;background:var(--red)"></div></div>
+          <div class="bar-val" style="color:var(--red)">49.5 min</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--red)">⚠️ Coyoacan</div>
+          <div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--yellow)"></div></div>
+          <div class="bar-val" style="color:var(--yellow)">48.9 min</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label" style="color:var(--yellow)">⚠️ Jalapa</div>
+          <div class="bar-track"><div class="bar-fill" style="width:62%;background:var(--yellow)"></div></div>
+          <div class="bar-val" style="color:var(--yellow)">43.5 min</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Tamaulipas</div>
+          <div class="bar-track"><div class="bar-fill" style="width:53%;background:#888"></div></div>
+          <div class="bar-val" style="color:#888">36.8 min</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Polanco</div>
+          <div class="bar-track"><div class="bar-fill" style="width:52%;background:#888"></div></div>
+          <div class="bar-val" style="color:#888">36.4 min</div>
+        </div>
+        <div style="margin-top:8px;padding:8px 10px;background:rgba(239,68,68,0.08);border-radius:6px;border-left:2px solid var(--red)">
+          <div style="font-size:10px;color:#fca5a5">⚠️ Todas las tiendas superan el objetivo de 30 min. Antara está 39 min por encima del target.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. BAD ORDERS + DEFECTOS -->
+  <div class="section-label">🛑 Calidad de Pedidos</div>
+  <div class="grid-3 mb-24">
+    <div class="kpi">
+      <div class="kpi-accent yellow"></div>
+      <div class="kpi-label">Defect Rate (periodo)</div>
+      <div class="kpi-value" style="color:var(--yellow)">2.55%</div>
+      <div class="kpi-delta down">↑ +0.02pp vs Abr</div>
+      <div class="kpi-sub">Obj máx: 1.2% · Superado</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent yellow"></div>
+      <div class="kpi-label">Cancel Rate (periodo)</div>
+      <div class="kpi-value" style="color:var(--yellow)">1.70%</div>
+      <div class="kpi-delta down">↑ Creciente desde marzo</div>
+      <div class="kpi-sub">Obj máx: 0.7% · Superado</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-accent red"></div>
+      <div class="kpi-label">Delay Rate</div>
+      <div class="kpi-value" style="color:var(--red)">2.44%</div>
+      <div class="kpi-delta down">↑ Pico en mayo: 7.41%</div>
+      <div class="kpi-sub">Semana 27-Abr: 7.41%</div>
+    </div>
+  </div>
+
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <div class="card-title">Tiendas con Mayor Incidencia de Defectos</div>
+      <table class="metric-table">
+        <thead>
+          <tr>
+            <th>Tienda</th>
+            <th>Quejas</th>
+            <th>Órdenes Fin.</th>
+            <th>% DR</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Polanco</td>
+            <td>1</td>
+            <td>8</td>
+            <td><span class="pill red">12.5%</span></td>
+          </tr>
+          <tr>
+            <td>Coyoacan</td>
+            <td>1</td>
+            <td>20</td>
+            <td><span class="pill yellow">5.0%</span></td>
+          </tr>
+          <tr>
+            <td>Tamaulipas</td>
+            <td>—</td>
+            <td>23</td>
+            <td><span class="pill green">~2%</span></td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="margin-top:12px">
+        <div class="alert warn">
+          <strong>Defecto recurrente — Polanco</strong>
+          "Pedí carne y me llegó de elote" — wrong_item (COMPENSATED)
+        </div>
+        <div class="alert warn">
+          <strong>Defecto — Coyoacan</strong>
+          "No llegó solo uno" — missing_item en Afogato Rufus Thomas
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Cancelaciones por Tipo — Partner</div>
+      <div style="margin-bottom:14px">
+        <div class="bar-row" style="margin-bottom:8px">
+          <div class="bar-label">CBPR (cobertura/precio)</div>
+          <div class="bar-track"><div class="bar-fill" style="width:70%;background:var(--rappi-orange)"></div></div>
+          <div class="bar-val" style="color:var(--rappi-orange)">4 eventos</div>
+        </div>
+        <div class="bar-row" style="margin-bottom:8px">
+          <div class="bar-label">Stockout</div>
+          <div class="bar-track"><div class="bar-fill" style="width:55%;background:var(--yellow)"></div></div>
+          <div class="bar-val" style="color:var(--yellow)">3 eventos</div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Delay in Store</div>
+          <div class="bar-track"><div class="bar-fill" style="width:30%;background:var(--red)"></div></div>
+          <div class="bar-val" style="color:var(--red)">2 eventos</div>
+        </div>
+      </div>
+      <div class="alert danger">
+        <strong>Cuauhtémoc — CBPR reincidente</strong>
+        3 cancelaciones por CBPR en marzo-abril. Semana 30-Mar: 2 cancelaciones en un solo período (28.6% cancel rate semanal).
+      </div>
+    </div>
+  </div>
+
+  <!-- 6. USUARIOS Y RETENCIÓN -->
+  <div class="section-label">👥 Usuarios & Retención</div>
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <div class="card-title">Tipo de Usuarios — Mayo 2026</div>
+      <div class="user-types" style="margin-bottom:16px">
+        <div class="user-type-item">
+          <div class="user-type-pct" style="color:#3B82F6">39%</div>
+          <div class="user-type-n">35 usuarios</div>
+          <div class="user-type-label">First Order</div>
+        </div>
+        <div class="user-type-item">
+          <div class="user-type-pct" style="color:#FF441B">40%</div>
+          <div class="user-type-n">36 usuarios</div>
+          <div class="user-type-label">Reactivados</div>
+        </div>
+        <div class="user-type-item">
+          <div class="user-type-pct" style="color:#22C55E">20%</div>
+          <div class="user-type-n">18 usuarios</div>
+          <div class="user-type-label">Retenidos</div>
+        </div>
+      </div>
+      <div class="alert warn">
+        <strong>Señal de alerta: Retención muy baja</strong>
+        Solo 20% de usuarios retenidos (vs 22% en mayo 2025). Alta dependencia de primeras compras y reactivaciones — indicio de que usuarios no están repitiendo de forma orgánica.
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Funnel de Conversión — Mayo</div>
+      <div class="funnel">
+        <div class="funnel-step">
+          <div class="funnel-pct" style="color:#888">100%</div>
+          <div>
+            <div class="funnel-label">Clicks (SST)</div>
+            <div style="font-size:10px;color:var(--text-muted)">Sessions Store Type</div>
+          </div>
+          <div class="funnel-n">602 clicks</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-pct" style="color:var(--yellow)">23.1%</div>
+          <div>
+            <div class="funnel-label">Add to Cart (ATC)</div>
+            <div style="font-size:10px;color:var(--text-muted)">BM categoría: 28.2%</div>
+          </div>
+          <div class="funnel-n">139 carts</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-pct" style="color:var(--blue)">82%</div>
+          <div>
+            <div class="funnel-label">Proceed to Checkout</div>
+          </div>
+          <div class="funnel-n">114</div>
+        </div>
+        <div class="funnel-step">
+          <div class="funnel-pct" style="color:var(--blue)">82.5%</div>
+          <div>
+            <div class="funnel-label">Order Placed</div>
+          </div>
+          <div class="funnel-n">94</div>
+        </div>
+        <div class="funnel-step" style="border:1px solid var(--rappi-orange);background:rgba(255,68,27,0.06)">
+          <div class="funnel-pct" style="color:var(--rappi-orange)">15.1%</div>
+          <div>
+            <div class="funnel-label" style="color:var(--rappi-orange)">Order Confirmed (OPC)</div>
+            <div style="font-size:10px;color:var(--text-muted)">BM: 14.6% — ligeramente arriba</div>
+          </div>
+          <div class="funnel-n" style="color:var(--rappi-orange)">91 órd.</div>
+        </div>
+      </div>
+      <div style="margin-top:10px;font-size:11px;color:var(--text-muted)">
+        ⚠️ ATC rate (23.1%) por debajo del benchmark de categoría (28.2%) — oportunidad en menú / foto de productos
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. TOP PRODUCTOS -->
+  <div class="section-label">🏆 Top Productos — Mayo 2026</div>
+  <div class="grid-2 mb-24">
+    <div class="card">
+      <div class="card-title">Ranking por Piezas</div>
+      <div>
+        <div class="prod-row"><div class="prod-rank">#1</div><div class="prod-name">PONCHO SANCHEZ</div><div class="prod-piezas">13</div><div class="prod-delta-wrap"><span class="pill red">-27.8%</span></div></div>
+        <div class="prod-row"><div class="prod-rank">#2</div><div class="prod-name">Carne molida</div><div class="prod-piezas">8</div><div class="prod-delta-wrap"><span class="pill green">+100%</span></div></div>
+        <div class="prod-row"><div class="prod-rank">#2</div><div class="prod-name">JOE LEWIS</div><div class="prod-piezas">8</div><div class="prod-delta-wrap"><span class="pill green">+33%</span></div></div>
+        <div class="prod-row"><div class="prod-rank">#2</div><div class="prod-name">OMELETTE JAMON Y QUESO</div><div class="prod-piezas">8</div><div class="prod-delta-wrap"><span class="pill red">-27.3%</span></div></div>
+        <div class="prod-row"><div class="prod-rank">#2</div><div class="prod-name">PANQUE MATCHA</div><div class="prod-piezas">8</div><div class="prod-delta-wrap"><span class="pill blue">nuevo</span></div></div>
+        <div class="prod-row"><div class="prod-rank">#6</div><div class="prod-name">CAPUCHINO / LATTE</div><div class="prod-piezas">7</div><div class="prod-delta-wrap"><span class="pill green">+16.7%</span></div></div>
+        <div class="prod-row"><div class="prod-rank">#6</div><div class="prod-name">Panque De Platano</div><div class="prod-piezas">7</div><div class="prod-delta-wrap"><span class="pill green">+133%</span></div></div>
+        <div class="prod-row"><div class="prod-rank">#8</div><div class="prod-name">Crea Tu Waffle</div><div class="prod-piezas">6</div><div class="prod-delta-wrap"><span class="pill green">+500%</span></div></div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-title">Insights de Productos</div>
+      <div class="alert success">
+        <strong>🚀 Emergentes fuertes</strong>
+        Crea Tu Waffle (+500%), Panque De Plátano (+133%), Carne molida (+100%) — productos con momentum positivo que merecen visibilidad en el menú.
+      </div>
+      <div class="alert warn">
+        <strong>📉 Heros en caída</strong>
+        PONCHO SANCHEZ (#1 en piezas pero -27.8%) y CHAI SUCIO (-60%) muestran erosión. CHAI SUCIO bajó de 10 piezas a solo 4.
+      </div>
+      <div class="alert info">
+        <strong>💡 Oportunidad Cross-Sell</strong>
+        Sin datos de venta cruzada en mayo. Activar combos con top SKUs podría impulsar AOV desde $310 hacia $340+.
+      </div>
+      <div style="margin-top:10px;padding:10px;background:var(--dark-3);border-radius:8px">
+        <div style="font-size:11px;color:var(--text-muted)">Total piezas mayo</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:22px">190 <span style="font-size:13px;color:var(--red);font-weight:400">vs 215 LM (-11.6%)</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8. DISPONIBILIDAD POR TIENDA -->
+  <div class="section-label">🟢 Disponibilidad por Tienda</div>
+  <div class="card mb-24">
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:10px">
+      <div style="padding:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Cuauhtémoc</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--green)">100%</div>
+        <div style="font-size:10px;color:var(--green)">✅ Top</div>
+      </div>
+      <div style="padding:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Coyoacan</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--green)">100%</div>
+        <div style="font-size:10px;color:var(--green)">✅ Top</div>
+      </div>
+      <div style="padding:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Jalapa</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--green)">100%</div>
+        <div style="font-size:10px;color:var(--green)">✅ Top</div>
+      </div>
+      <div style="padding:12px;background:rgba(34,197,94,0.08);border:1px solid rgba(34,197,94,0.2);border-radius:10px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Polanco</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--green)">100%</div>
+        <div style="font-size:10px;color:var(--green)">✅ Top</div>
+      </div>
+      <div style="padding:12px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Tamaulipas</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--yellow)">96.8%</div>
+        <div style="font-size:10px;color:var(--yellow)">⚠️ Monitorear</div>
+      </div>
+      <div style="padding:12px;background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.15);border-radius:10px;text-align:center">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Antara</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--yellow)">99.9%</div>
+        <div style="font-size:10px;color:var(--green)">✅ Bien</div>
+      </div>
+      <div style="padding:12px;background:rgba(239,68,68,0.1);border:1px solid rgba(239,68,68,0.3);border-radius:10px;text-align:center;grid-column:span 2">
+        <div style="font-size:11px;color:var(--text-muted);margin-bottom:6px">Naucalpan</div>
+        <div style="font-family:'Syne',sans-serif;font-weight:700;font-size:20px;color:var(--red)">0.0%</div>
+        <div style="font-size:10px;color:var(--red)">🚨 CERRADA — Sin actividad registrada</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 9. PRIORIDADES Y ACCIONES -->
+  <div class="section-label">🎯 Prioridades & Acciones Sugeridas</div>
+  <div class="grid-2 mb-24">
+    <div>
+      <div class="alert danger">
+        <strong>🚨 P1 — Tiempo de entrega crítico (toda la marca)</strong>
+        44.7 min promedio vs objetivo de 30 min. Antara en 69 min. Revisar zonas de cobertura RT, timing de cocina y apertura de ventanas horarias.
+      </div>
+      <div class="alert danger">
+        <strong>🚨 P1 — Naucalpan sin operación</strong>
+        0 órdenes y 0% disponibilidad en mayo. Confirmar status de la tienda y decidir si activar o dar de baja.
+      </div>
+      <div class="alert warn">
+        <strong>⚠️ P2 — Defect y Cancel Rate fuera de objetivo</strong>
+        DR: 2.13% (obj 1.2%) y Cancel: 1.70% (obj 0.7%). Polanco con 12.5% DR este mes — requiere auditoría de preparación de órdenes.
+      </div>
+      <div class="alert warn">
+        <strong>⚠️ P2 — Polanco y Antara en caída fuerte</strong>
+        Polanco: -46.7% órdenes vs mes anterior. Antara: -48% venta. Investigar causa raíz (visibilidad, operación, zona).
+      </div>
+    </div>
+    <div>
+      <div class="alert info">
+        <strong>💡 P3 — Activar conversión en ATC</strong>
+        23.1% ATC vs benchmark 28.2%. Mejorar fotos, descripciones y precios de productos estrella para reducir fricción en el carrito.
+      </div>
+      <div class="alert info">
+        <strong>💡 P3 — Impulsar productos emergentes</strong>
+        Crea Tu Waffle y Panque de Plátano con crecimiento explosivo. Subir posición en el menú, agregar al top del banner o combos.
+      </div>
+      <div class="alert success">
+        <strong>✅ P4 — Mantener fortalezas</strong>
+        Disponibilidad (99.4%), Cooking Time (11.1 min) y RTWT (2.11 min) están todos por encima del objetivo. Coyoacan y Jalapa muestran crecimiento real este mes.
+      </div>
+      <div class="alert success">
+        <strong>✅ P4 — Reactivar usuarios</strong>
+        40% de usuarios del mes son reactivados — señal de que la marca tiene base pero necesita campaña de retención (frecuencia solo 1.06).
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="border-top:1px solid var(--border);padding-top:20px;display:flex;justify-content:space-between;align-items:center">
+    <div style="font-size:11px;color:var(--text-muted)">
+      Fuentes: Business Review MX · Ops MX Comercial · X-Rays Dashboard · Global Rest Acumulado · Data Export
+    </div>
+    <div style="font-size:11px;color:var(--text-muted)">Boicot Café CDMX · Análisis Mayo 2026</div>
+  </div>
+
+</div>
+</body>
+</html>
